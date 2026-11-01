@@ -145,6 +145,52 @@ perfect. Document this limitation instead of hiding it.
 - Keep `SharedPreferences` names in the `neoheadsup_*` namespace.
 - Do not log secrets or user content.
 
+## Commit conventions
+
+All commits must follow the **Conventional Commits** specification:
+
+```text
+<type>(<optional scope>): <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+Use one of these types:
+
+- `feat`: a user-facing feature
+- `fix`: a bug fix
+- `docs`: documentation only
+- `test`: tests only
+- `refactor`: code change that neither fixes a bug nor adds a feature
+- `perf`: performance improvement
+- `build`: build system or dependency changes
+- `ci`: CI configuration changes
+- `chore`: maintenance that does not fit another type
+
+Rules:
+
+- Write the description in the imperative mood, lowercase, and without a trailing period.
+- Keep the subject concise, ideally under 72 characters.
+- Use a scope when it clarifies the affected area, for example `detection`, `alarm`, `ui`,
+  `notifications`, `docs`, or `agents`.
+- Mark breaking changes with `!` after the type/scope and explain them in a
+  `BREAKING CHANGE:` footer.
+- Reference issues in the footer when applicable.
+- Do not use vague messages such as `changes`, `fixes`, or `update`.
+
+Examples:
+
+```text
+feat(detection): require continuous walking evidence
+fix(alarm): reschedule confirmation after a missed tick
+docs: update Pixel 7a validation checklist
+test(detection): cover stale session expiry
+refactor(notifications): centralize alert policy checks
+chore: update Gradle wrapper
+```
+
 ## Repository and Git rules
 
 - The repository is private. Do not publish it publicly without explicit user approval.

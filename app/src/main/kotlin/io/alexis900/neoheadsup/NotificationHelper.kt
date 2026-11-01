@@ -75,7 +75,7 @@ object NotificationHelper {
             .setCategory(Notification.CATEGORY_REMINDER)
             .setPriority(Notification.PRIORITY_HIGH)
             .setVisibility(Notification.VISIBILITY_PUBLIC)
-            .setColor(context.getColor(R.color.primary))
+            .setColor(context.getColor(R.color.brand))
             .setAutoCancel(true)
             .setContentIntent(contentIntent)
             .addAction(

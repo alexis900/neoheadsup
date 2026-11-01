@@ -45,6 +45,7 @@ existe permiso de Internet.
   muestra en la interfaz.
 - Acciones de notificación: **No estoy caminando** (snooze de 30 minutos) y **Desactivar**.
 - Recordatorio de prueba manual desde la interfaz.
+- **Tema claro y oscuro** según el ajuste del sistema, con una paleta propia para cada modo.
 
 ## Tecnologías utilizadas
 

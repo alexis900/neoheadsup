@@ -146,6 +146,9 @@ perfect. Document this limitation instead of hiding it.
   or layout files.
 - Keep `app/src/main/res/xml/locales_config.xml` and the manifest `android:localeConfig`
   attribute in sync with every supported language.
+- Keep the UI colors in `values/colors.xml` and `values-night/colors.xml`; do not hardcode
+  colors in layouts or Kotlin. The app follows the system light/dark setting, and the brand
+  color stays constant for the launcher and notification icon.
 - Preserve the diagnostic format: timestamp, transition/tick, activity, previous and new
   state, accepted/rejected reason, and alert decision reason.
 - Keep notification channel id `heads_up` and notification id `2001` unless there is a

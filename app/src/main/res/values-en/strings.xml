@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NeoHeadsUp</string>
+    <string name="app_tagline">Stay aware while walking</string>
+
+    <string name="label_reminder">Reminder</string>
+    <string name="label_reminder_desc">Warn me when I walk while using my phone</string>
+    <string name="label_cooldown">Reminder frequency</string>
+    <string name="label_cooldown_desc">Minimum time between reminders</string>
+    <string name="label_permissions">Permissions</string>
+    <string name="label_activity_permission">Physical activity</string>
+    <string name="label_activity_permission_desc">Required to detect that you are walking</string>
+    <string name="label_notification_permission">Notifications</string>
+    <string name="label_notification_permission_desc">Required to show you the reminder</string>
+    <string name="label_diagnostics">Diagnostics</string>
+    <string name="label_diagnostics_desc">Latest detection event. The full history is in Logcat under the NeoHeadsUp tag.</string>
+
+    <string name="channel_name">Walking reminders</string>
+    <string name="channel_description">Warns you to look ahead when you walk while using your phone.</string>
+
+    <string name="notification_text">You are walking and looking at your phone. Look up and watch where you are going.</string>
+    <string name="notification_subtext">NeoHeadsUp</string>
+    <string name="action_snooze">Not walking</string>
+    <string name="action_disable">Turn off</string>
+
+    <string name="cooldown_option">Every %1$d min</string>
+    <string name="status_active">On · reminder every %1$d min</string>
+    <string name="status_walking">Walking · reminder every %1$d min</string>
+    <string name="status_pending">Confirming walk…</string>
+    <string name="status_off">Off</string>
+    <string name="status_missing_permissions">Missing permissions to turn it on</string>
+
+    <string name="permission_granted">Granted</string>
+    <string name="permission_required">Not granted</string>
+    <string name="grant_permission">Grant</string>
+    <string name="open_settings">Open settings</string>
+    <string name="notifications_blocked">Blocked</string>
+    <string name="test_sent">Test reminder sent</string>
+    <string name="enable_failed">Could not turn it on. Check that Google Play Services is available.</string>
+    <string name="permissions_needed">Grant the required permissions to turn on the reminder.</string>
+    <string name="permissions_granted">Permissions granted</string>
+    <string name="permission_dialog_title">Permissions required</string>
+    <string name="permission_settings_activity">The physical activity permission is blocked. Open the app settings and grant it manually.</string>
+    <string name="permission_settings_notifications">The notification permission is blocked. Open the app settings and grant it manually.</string>
+    <string name="notification_settings_message">Notifications for this app are blocked. Open the settings and allow the “Walking reminders” channel.</string>
+
+    <string name="diagnostics_empty">No activity recorded</string>
+    <string name="action_test">Send test reminder</string>
+    <string name="footer_note">Works offline and never sends data anywhere. It only uses Google Play Services activity detection and keeps its state on the device.</string>
+
+    <string-array name="notification_titles">
+        <item>Look up</item>
+        <item>Watch out</item>
+        <item>Look around</item>
+        <item>Mind your steps</item>
+        <item>Stay alert</item>
+    </string-array>
+</resources>

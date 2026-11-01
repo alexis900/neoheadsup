@@ -1,0 +1,42 @@
+# Gradle
+.gradle/
+build/
+**/build/
+
+# Local configuration (never commit)
+local.properties
+sdk.dir
+ndk.dir
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
+.navigation/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Signing material (never commit)
+*.jks
+*.keystore
+*.p12
+*.pfx
+keystore.properties
+signing.properties
+
+# Build and runtime artifacts
+*.apk
+*.aab
+*.ap_
+*.dex
+*.class
+*.hprof
+*.log
+lint-results-*.html
+lint-results-*.xml
+
+# OS files
+.DS_Store
+Thumbs.db

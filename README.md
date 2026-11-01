@@ -195,7 +195,7 @@ La validación con movimiento real debe repetirse con la versión final:
 
 - [x] Instalar la nueva app (`io.alexis900.neoheadsup`) y comprobar que el launcher muestra
       NeoHeadsUp (puede convivir con la versión anterior hasta desinstalarla).
-- [ ] Caminar sentado quieto durante varios minutos y confirmar que no aparece ningún aviso.
+- [ ] Permanecer sentado quieto durante varios minutos y confirmar que no aparece ningún aviso.
 - [ ] Caminar de verdad con la pantalla encendida y desbloqueada: el aviso debe aparecer tras
       unos 15 segundos, no de inmediato.
 - [ ] Entrar y salir rápidamente de la actividad de caminata: la confirmación de 15 s debe

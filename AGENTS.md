@@ -1,0 +1,190 @@
+# AGENTS.md
+
+This file contains working instructions for AI coding agents and human contributors. It is
+kept in English on purpose; user-facing documentation remains in Spanish.
+
+## Project overview
+
+NeoHeadsUp is a small Android app that reminds the user to look up when they walk while
+using the phone. It is inspired by Digital Wellbeing Heads Up, but it is an independent
+implementation with no Google branding or proprietary code.
+
+- Visible name: **NeoHeadsUp**
+- Package / `applicationId` / `namespace`: `io.alexis900.neoheadsup`
+- Repository: `alexis900/neoheadsup` (private)
+- Primary documentation language: Spanish
+- License: none; all rights reserved unless a license is added explicitly
+
+## Product constraints
+
+Do not add any of the following without an explicit product decision:
+
+- Internet access or a backend
+- GPS or location permissions
+- Accessibility services
+- Overlays or full-screen alerts
+- Invasive or unnecessary permissions
+- Automatic data upload or analytics
+
+The app must remain local-only. State belongs in the app's private `SharedPreferences`.
+
+## Detection rules
+
+The detection core is deliberately conservative:
+
+- A walking session is confirmed only after **15 seconds** of continuous WALKING evidence.
+- A stop is confirmed only after **10 seconds** without walking evidence.
+- The default reminder cooldown is **15 minutes**.
+- A session with no recent evidence expires after **10 minutes**.
+- An alert is never shown for an unconfirmed session, a session with a pending stop, or a
+  session whose evidence is stale.
+- Duplicate and out-of-order activity events are rejected.
+- Reboots invalidate the previous session. App updates may keep it because the monotonic
+  clock remains valid.
+- The notification is shown only while the screen is on and unlocked.
+
+Do not weaken these rules to make tests pass. If a timing constant changes, update the
+constants, unit tests, README, and this file together.
+
+## Architecture
+
+Keep the existing architecture unless there is a clear, documented reason to change it.
+
+Pure Kotlin detection core (no Android dependencies):
+
+- `app/src/main/kotlin/io/alexis900/neoheadsup/detection/SessionConfig.kt`
+- `.../SessionState.kt`
+- `.../SessionSnapshot.kt`
+- `.../DetectionEvent.kt`
+- `.../SessionController.kt`
+- `.../AlertDecider.kt`
+- `.../SessionUpdate.kt`
+
+Android integration:
+
+- `WalkingTransitionReceiver.kt`: receives Activity Recognition transitions
+- `WalkingDetector.kt`: registers/unregisters Play Services
+- `DetectionEngine.kt`: connects the core to Android, persistence, and diagnostics
+- `SessionStore.kt`: persists the session snapshot
+- `RecheckScheduler.kt` / `RecheckReceiver.kt`: confirmation, stop, and expiry checks
+- `UserPresentReceiver.kt`: rechecks after unlock
+- `BootReceiver.kt`: handles reboot and package replacement
+- `NotificationActionReceiver.kt`: snooze and disable actions
+- `HeadsUpNotifier.kt`: applies the alert policy and posts notifications
+- `Diag.kt`: Logcat diagnostics and the latest event shown in the UI
+- `MainActivity.kt`: permissions, enable/disable, cooldown, test, and diagnostics UI
+
+The UI uses framework Views and XML, not Jetpack Compose. Do not migrate to Compose as part
+of an unrelated fix. If a migration is requested, treat it as a separate change with its own
+validation plan.
+
+## Build and test commands
+
+Use JDK 17 and a configured Android SDK. `local.properties` must not be committed.
+
+```bash
+./gradlew testDebugUnitTest assembleDebug assembleDebugAndroidTest lintDebug
+```
+
+Expected local environment used during development:
+
+```bash
+export JAVA_HOME=/tmp/opencode/jdk
+export PATH="$JAVA_HOME/bin:$PATH"
+export ANDROID_HOME="$HOME/Android/Sdk"
+```
+
+Build outputs:
+
+- App APK: `app/build/outputs/apk/debug/app-debug.apk`
+- Test APK: `app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk`
+
+Install and run the device smoke test:
+
+```bash
+adb install -r app/build/outputs/apk/debug/app-debug.apk
+adb install -r -t app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+adb shell am instrument -w \
+  io.alexis900.neoheadsup.test/io.alexis900.neoheadsup.WalkingTestRunner
+```
+
+The device smoke test uses synthetic transitions. It is useful, but it does **not** replace a
+real-walk validation on a physical device.
+
+Check real diagnostics with:
+
+```bash
+adb logcat -s NeoHeadsUp
+```
+
+## Testing expectations
+
+Before claiming a code change is complete:
+
+1. Unit tests pass: `./gradlew testDebugUnitTest`.
+2. The debug APK and test APK build.
+3. Android lint has no errors.
+4. If detection behavior changed, run the instrumented smoke test on a device.
+5. If behavior depends on real motion, ask the user to perform a real walk while the app is
+   enabled through the UI, not by writing `enabled=true` directly.
+6. Verify the persisted state and relevant diagnostic lines.
+
+Remember that Activity Recognition can report false transitions. The state machine adds
+confirmation windows and evidence expiry, but it cannot make the underlying platform sensor
+perfect. Document this limitation instead of hiding it.
+
+## Coding conventions
+
+- Keep the detection core pure and JVM-testable.
+- Use Kotlin coroutines/tasks only where the existing Android APIs require them.
+- Keep comments focused on why a decision exists, not on restating the code.
+- Preserve the diagnostic format: timestamp, transition/tick, activity, previous and new
+  state, accepted/rejected reason, and alert decision reason.
+- Keep notification channel id `heads_up` and notification id `2001` unless there is a
+  migration reason to change them.
+- Keep `SharedPreferences` names in the `neoheadsup_*` namespace.
+- Do not log secrets or user content.
+
+## Repository and Git rules
+
+- The repository is private. Do not publish it publicly without explicit user approval.
+- Do not add a license unless the user asks for one.
+- Never commit:
+  - `local.properties`
+  - signing keys or keystores
+  - tokens, credentials, or `.env` files
+  - build outputs such as `app/build/`
+  - `.gradle/` caches
+- Do not use `git push --force`.
+- Do not overwrite or delete unrelated user changes.
+- Before reporting success, verify the remote state with `git ls-remote` or the GitHub API and
+  confirm that local `HEAD` matches `origin/main`.
+
+## Current validation status
+
+Validated on a Pixel 7a:
+
+- New package installs and appears as NeoHeadsUp.
+- Runtime permissions and notification channel work.
+- Synthetic transition smoke test passes.
+- A real walking transition was observed: confirmation, notification, and a 10-second stop
+  confirmation closed the session.
+
+Still pending before calling the physical validation complete:
+
+- A controlled seated baseline with no false alert.
+- Confirmation of the observed real walk with the user, not only sensor logs.
+- Lock/unlock behavior while walking.
+- Cooldown behavior across two walks.
+- Snooze and disable notification actions.
+- Reboot behavior.
+- Full review of the Pixel 7a checklist in `README.md`.
+
+## Useful files
+
+- `README.md`: Spanish product and validation documentation
+- `app/build.gradle`: package, SDK levels, dependencies, and test runner
+- `app/src/main/AndroidManifest.xml`: permissions and components
+- `app/src/main/kotlin/io/alexis900/neoheadsup/detection/`: pure detection core
+- `app/src/test/kotlin/io/alexis900/neoheadsup/detection/DetectionCoreTest.kt`: JVM tests
+- `app/src/androidTest/kotlin/io/alexis900/neoheadsup/WalkingTestRunner.kt`: device smoke test

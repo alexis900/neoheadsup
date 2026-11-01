@@ -184,6 +184,8 @@ Estado: **pendiente de validación física completa**. La instalación, los perm
 de notificación y una transición real de caminata ya se comprobaron, pero la validación
 siguiente debe repetirse con la versión final:
 
+- [ ] Instalar la nueva app (`io.alexis900.neoheadsup`) y comprobar que el launcher muestra
+      NeoHeadsUp (puede convivir con la versión anterior hasta desinstalarla).
 - [ ] Caminar sentado quieto durante varios minutos y confirmar que no aparece ningún aviso.
 - [ ] Caminar de verdad con la pantalla encendida y desbloqueada: el aviso debe aparecer tras
       unos 15 segundos, no de inmediato.
@@ -244,8 +246,8 @@ escriben en el registro local y en la propia app.
 ## Estado de desarrollo
 
 Versión inicial de NeoHeadsUp. La lógica de detección está cubierta por pruebas unitarias y la
-app compila e instala en el Pixel 7a. La validación física completa sigue pendiente según la
-lista de comprobaciones.
+app compila y genera un APK instalable. La instalación y la validación física completa en el
+Pixel 7a siguen pendientes según la lista de comprobaciones.
 
 ## Licencia
 

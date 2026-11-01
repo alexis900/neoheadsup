@@ -141,6 +141,11 @@ perfect. Document this limitation instead of hiding it.
 - Keep the detection core pure and JVM-testable.
 - Use Kotlin coroutines/tasks only where the existing Android APIs require them.
 - Keep comments focused on why a decision exists, not on restating the code.
+- Put every user-facing string in both `app/src/main/res/values/strings.xml` (English base)
+  and `app/src/main/res/values-es/strings.xml` (Spanish). Do not hardcode UI text in Kotlin
+  or layout files.
+- Keep `app/src/main/res/xml/locales_config.xml` and the manifest `android:localeConfig`
+  attribute in sync with every supported language.
 - Preserve the diagnostic format: timestamp, transition/tick, activity, previous and new
   state, accepted/rejected reason, and alert decision reason.
 - Keep notification channel id `heads_up` and notification id `2001` unless there is a
@@ -222,6 +227,8 @@ Validated on a Pixel 7a:
 - The alert was not repeated during the same walk (`reason=cooldown`).
 - The snooze and disable notification actions worked; re-enabling the feature cleared snooze
   and restored activity-recognition registration.
+- English and Spanish UI, notification actions, and permission dialogs were verified on the
+  device, including Android's per-app language selector.
 
 Still pending before calling the physical validation complete:
 

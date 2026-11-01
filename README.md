@@ -11,7 +11,8 @@ de Google y no está afiliada a Google.
 - **Repositorio:** `neoheadsup`
 - **Tecnología principal:** Kotlin
 - **Plataforma:** Android
-- **Idioma principal:** español (con traducción al inglés)
+- **Idiomas:** español e inglés
+- **Idioma principal de la documentación:** español
 
 ## Objetivo
 
@@ -220,6 +221,24 @@ Lista de comprobaciones:
 - [ ] Reiniciar el dispositivo y confirmar que la sesión anterior no se reutiliza.
 - [x] Revisar `adb logcat -s NeoHeadsUp` y verificar los motivos de aceptación, rechazo y
       decisión del aviso.
+
+## Idiomas
+
+La interfaz y las notificaciones están disponibles en **español e inglés**:
+
+- `app/src/main/res/values/strings.xml`: inglés, idioma base.
+- `app/src/main/res/values-es/strings.xml`: español.
+- `app/src/main/res/xml/locales_config.xml`: declara `en` y `es` como idiomas
+  compatibles.
+
+La app sigue el idioma del sistema. En Android 13 o superior también se puede elegir el
+idioma de NeoHeadsUp desde los ajustes de la aplicación del sistema. En Android 10–12 la app
+usa el idioma configurado en el dispositivo. El nombre y la descripción del canal de
+notificaciones se actualizan al abrir la app con el nuevo idioma.
+
+Verificado en el Pixel 7a: la interfaz, la notificación con sus acciones y los diálogos de
+permisos se muestran en inglés y en español, y el selector de idioma de Android reconoce la
+app con ambos idiomas.
 
 ## Compatibilidad
 

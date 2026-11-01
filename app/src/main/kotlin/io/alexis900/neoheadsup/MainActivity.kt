@@ -319,7 +319,7 @@ class MainActivity : Activity() {
             .setTitle(R.string.permission_dialog_title)
             .setMessage(message)
             .setPositiveButton(R.string.open_settings) { _, _ -> openAppSettings() }
-            .setNegativeButton(android.R.string.cancel, null)
+            .setNegativeButton(R.string.cancel, null)
             .show()
     }
 
@@ -330,7 +330,7 @@ class MainActivity : Activity() {
             .setPositiveButton(R.string.open_settings) { _, _ ->
                 openNotificationSettings()
             }
-            .setNegativeButton(android.R.string.cancel, null)
+            .setNegativeButton(R.string.cancel, null)
             .show()
     }
 

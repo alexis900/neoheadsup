@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NeoHeadsUp</string>
+    <string name="app_tagline">Mantente alerta mientras caminas</string>
+
+    <string name="label_reminder">Recordatorio</string>
+    <string name="label_reminder_desc">Avisa cuando caminas mientras usas el teléfono</string>
+    <string name="label_cooldown">Frecuencia del aviso</string>
+    <string name="label_cooldown_desc">Tiempo mínimo entre recordatorios</string>
+    <string name="label_permissions">Permisos</string>
+    <string name="label_activity_permission">Actividad física</string>
+    <string name="label_activity_permission_desc">Necesario para detectar que estás caminando</string>
+    <string name="label_notification_permission">Notificaciones</string>
+    <string name="label_notification_permission_desc">Necesario para mostrarte el recordatorio</string>
+    <string name="label_diagnostics">Diagnóstico</string>
+    <string name="label_diagnostics_desc">Último evento de detección. El historial completo está en Logcat con la etiqueta NeoHeadsUp.</string>
+
+    <string name="channel_name">Recordatorios al caminar</string>
+    <string name="channel_description">Te avisa para que mires al frente cuando caminas usando el teléfono.</string>
+
+    <string name="notification_text">Estás caminando y mirando el teléfono. Levanta la vista y mira al frente.</string>
+    <string name="notification_subtext">NeoHeadsUp</string>
+    <string name="action_snooze">No estoy caminando</string>
+    <string name="action_disable">Desactivar</string>
+
+    <string name="cooldown_option">Cada %1$d min</string>
+    <string name="status_active">Activo · aviso cada %1$d min</string>
+    <string name="status_walking">Caminando · aviso cada %1$d min</string>
+    <string name="status_pending">Confirmando caminata…</string>
+    <string name="status_off">Desactivado</string>
+    <string name="status_missing_permissions">Faltan permisos para activarlo</string>
+
+    <string name="permission_granted">Concedido</string>
+    <string name="permission_required">Sin conceder</string>
+    <string name="grant_permission">Conceder</string>
+    <string name="open_settings">Abrir ajustes</string>
+    <string name="notifications_blocked">Bloqueadas</string>
+    <string name="test_sent">Recordatorio de prueba enviado</string>
+    <string name="cancel">Cancelar</string>
+    <string name="enable_failed">No se pudo activar. Comprueba que Google Play Services esté disponible.</string>
+    <string name="permissions_needed">Concede los permisos necesarios para activar el recordatorio.</string>
+    <string name="permissions_granted">Permisos concedidos</string>
+    <string name="permission_dialog_title">Permisos necesarios</string>
+    <string name="permission_settings_activity">El permiso de actividad física está bloqueado. Ábrelo en los ajustes de la app y concédelo manualmente.</string>
+    <string name="permission_settings_notifications">El permiso de notificaciones está bloqueado. Ábrelo en los ajustes de la app y concédelo manualmente.</string>
+    <string name="notification_settings_message">Las notificaciones de esta app están bloqueadas. Ábrelas en los ajustes y permite el canal «Recordatorios al caminar».</string>
+
+    <string name="diagnostics_empty">Sin actividad registrada</string>
+    <string name="action_test">Enviar recordatorio de prueba</string>
+    <string name="footer_note">Funciona sin conexión y no envía datos a ningún sitio. Solo usa la detección de actividad de Google Play Services y guarda el estado en el propio dispositivo.</string>
+
+    <string-array name="notification_titles">
+        <item>Levanta la vista</item>
+        <item>Ten cuidado</item>
+        <item>Mira a tu alrededor</item>
+        <item>Vigila tus pasos</item>
+        <item>Mantente alerta</item>
+    </string-array>
+</resources>

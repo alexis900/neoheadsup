@@ -50,7 +50,8 @@ existe permiso de Internet.
 - Kotlin 1.9.
 - Android SDK 34, mínimo Android 10 (API 29).
 - Vistas del framework Android (XML) y `SharedPreferences`.
-- `AlarmManager` para las comprobaciones de confirmación y caducidad.
+- `AlarmManager` y un chequeo en proceso con `Handler` para las comprobaciones de
+  confirmación, parada y caducidad. La alarma actúa como respaldo si el proceso se cierra.
 - Google Play Services Location (`ActivityRecognition`).
 - Gradle 8.7 con Android Gradle Plugin 8.5.2.
 - JUnit 4 para las pruebas unitarias de la lógica pura.
@@ -76,7 +77,9 @@ La capa Android conecta ese núcleo con el sistema:
 - `WalkingTransitionReceiver`: recibe las transiciones de Play Services.
 - `DetectionEngine`: carga/guarda el estado, programa alarmas y escribe diagnóstico.
 - `SessionStore`: persistencia privada del snapshot.
-- `RecheckReceiver` y `RecheckScheduler`: confirmación, parada, caducidad y rechequeos.
+- `RecheckReceiver` y `RecheckScheduler`: confirmación, parada, caducidad y rechequeos. El
+  `Handler` en proceso reduce el retraso de las alarmas inexactas; `AlarmManager` queda como
+  respaldo si Android cierra el proceso.
 - `UserPresentReceiver`: comprobación al desbloquear.
 - `BootReceiver`: recuperación tras reinicio o actualización.
 - `NotificationActionReceiver`: snooze y desactivación.
@@ -235,7 +238,9 @@ aparecer dos iconos. A cambio, la identidad técnica queda alineada con el nombr
   evidencia continua y caduca las sesiones sin evidencia reciente.
 - Si el proceso se fuerza a detener o el fabricante restringe el trabajo en segundo plano,
   las alarmas de confirmación pueden no ejecutarse.
-- Las alarmas no son exactas: `AlarmManager` puede retrasar unos segundos la confirmación.
+- Las alarmas no son exactas: `AlarmManager` puede retrasar la confirmación. Para reducirlo,
+  el chequeo también se programa con un `Handler` en proceso; si Android cierra el proceso,
+  solo queda el respaldo de la alarma y el aviso puede retrasarse.
 - El aviso solo se muestra con la pantalla encendida y desbloqueada. Nunca se usa un overlay
   ni una notificación a pantalla completa.
 - Tras 10 minutos de caminata continua sin nuevas transiciones, la sesión caduca por

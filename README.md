@@ -178,13 +178,19 @@ adb shell am instrument -w \
   io.alexis900.neoheadsup.test/io.alexis900.neoheadsup.WalkingTestRunner
 ```
 
+Resultado en Pixel 7a (transiciones sintéticas): `immediateNotification=false`,
+`walkingConfirmed=true`, `notified=true`, `exitClosed=true`. La prueba no sustituye la
+validación con movimiento real.
+
 ### Pruebas físicas pendientes en Pixel 7a
 
-Estado: **pendiente de validación física completa**. La instalación, los permisos, el canal
-de notificación y una transición real de caminata ya se comprobaron, pero la validación
-siguiente debe repetirse con la versión final:
+Estado: **validación física completa pendiente**. La instalación, los permisos, el canal de
+notificación, el renombrado del launcher y una prueba de humo instrumentada ya se comprobaron
+en el Pixel 7a. Esa prueba usa transiciones sintéticas y verifica que no hay aviso inmediato,
+que la caminata se confirma, que se muestra el recordatorio y que la parada cierra la sesión.
+La validación con movimiento real debe repetirse con la versión final:
 
-- [ ] Instalar la nueva app (`io.alexis900.neoheadsup`) y comprobar que el launcher muestra
+- [x] Instalar la nueva app (`io.alexis900.neoheadsup`) y comprobar que el launcher muestra
       NeoHeadsUp (puede convivir con la versión anterior hasta desinstalarla).
 - [ ] Caminar sentado quieto durante varios minutos y confirmar que no aparece ningún aviso.
 - [ ] Caminar de verdad con la pantalla encendida y desbloqueada: el aviso debe aparecer tras
@@ -245,9 +251,10 @@ escriben en el registro local y en la propia app.
 
 ## Estado de desarrollo
 
-Versión inicial de NeoHeadsUp. La lógica de detección está cubierta por pruebas unitarias y la
-app compila y genera un APK instalable. La instalación y la validación física completa en el
-Pixel 7a siguen pendientes según la lista de comprobaciones.
+Versión inicial de NeoHeadsUp. La lógica de detección está cubierta por pruebas unitarias, la
+app compila y el APK `io.alexis900.neoheadsup` está instalado en el Pixel 7a. La prueba de humo
+instrumentada con transiciones sintéticas se superó; la validación física con movimiento real
+sigue pendiente según la lista de comprobaciones.
 
 ## Licencia
 

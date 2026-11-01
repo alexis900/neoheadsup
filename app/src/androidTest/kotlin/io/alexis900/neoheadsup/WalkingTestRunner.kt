@@ -22,6 +22,8 @@ import com.google.android.gms.location.DetectedActivity
  *  - A synthetic WALKING enter must NOT notify immediately. After the 15 s confirmation the
  *    state must become WALKING and the reminder notification must appear.
  *  - A synthetic WALKING exit must keep the state for 10 s and then return to IDLE.
+ *  - Both confirmation windows are checked with a tolerance so an inexact alarm cannot
+ *    silently turn a 15 s confirmation into a 26 s one.
  *
  * Run with:
  *   adb shell am instrument -w \
@@ -62,29 +64,41 @@ class WalkingTestRunner : Instrumentation() {
             notificationManager.cancelAll()
 
             sendTransition(context, ActivityTransition.ACTIVITY_TRANSITION_ENTER)
+            val enterAtMs = SystemClock.uptimeMillis()
 
             // The reminder must not appear during the confirmation window.
             val immediateNotification = hasNotification(context)
             val walking = awaitState(context, SessionState.WALKING, 30_000L)
+            val confirmationLatencyMs = SystemClock.uptimeMillis() - enterAtMs
             val notified = awaitNotification(context, 10_000L)
             val walkingSnapshot = SessionStore.load(context)
 
             sendTransition(context, ActivityTransition.ACTIVITY_TRANSITION_EXIT)
+            val exitAtMs = SystemClock.uptimeMillis()
 
             val closed = awaitState(context, SessionState.IDLE, 20_000L)
+            val stopLatencyMs = SystemClock.uptimeMillis() - exitAtMs
             val closedSnapshot = SessionStore.load(context)
+
+            // The in-process handler should hit the 15 s / 10 s windows. Allow a generous
+            // margin for slow devices, but fail if the inexact alarm is used alone again.
+            val timingOk = confirmationLatencyMs in 14_000L..22_000L &&
+                stopLatencyMs in 9_000L..16_000L
 
             val ok = !immediateNotification &&
                 walking &&
                 notified &&
                 walkingSnapshot.lastEvidenceMs > 0L &&
                 closed &&
-                closedSnapshot.lastEvidenceMs == 0L
+                closedSnapshot.lastEvidenceMs == 0L &&
+                timingOk
 
             result.putString(
                 "result",
                 "immediateNotification=$immediateNotification " +
                     "walkingConfirmed=$walking notified=$notified " +
+                    "confirmationLatencyMs=$confirmationLatencyMs " +
+                    "stopLatencyMs=$stopLatencyMs timingOk=$timingOk " +
                     "walkingSince=${walkingSnapshot.walkingSinceMs} " +
                     "exitClosed=$closed " +
                     "lastDiagnostic=${Diag.latest(context)}"

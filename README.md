@@ -182,8 +182,10 @@ adb shell am instrument -w \
 ```
 
 Resultado en Pixel 7a (transiciones sintéticas): `immediateNotification=false`,
-`walkingConfirmed=true`, `notified=true`, `exitClosed=true`. La prueba no sustituye la
-validación con movimiento real.
+`walkingConfirmed=true`, `notified=true`, `confirmationLatencyMs=15083`,
+`stopLatencyMs=10090`, `timingOk=true`, `exitClosed=true`. La prueba también falla si las
+ventanas de 15 s y 10 s se alejan del margen esperado. No sustituye la validación con
+movimiento real.
 
 ### Pruebas físicas pendientes en Pixel 7a
 

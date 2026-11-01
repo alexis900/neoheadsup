@@ -187,29 +187,38 @@ Resultado en Pixel 7a (transiciones sintéticas): `immediateNotification=false`,
 ventanas de 15 s y 10 s se alejan del margen esperado. No sustituye la validación con
 movimiento real.
 
-### Pruebas físicas pendientes en Pixel 7a
+### Pruebas físicas en Pixel 7a
 
-Estado: **validación física completa pendiente**. La instalación, los permisos, el canal de
-notificación, el renombrado del launcher y una prueba de humo instrumentada ya se comprobaron
-en el Pixel 7a. Esa prueba usa transiciones sintéticas y verifica que no hay aviso inmediato,
-que la caminata se confirma, que se muestra el recordatorio y que la parada cierra la sesión.
-La validación con movimiento real debe repetirse con la versión final:
+Estado: **validación física principal superada; quedan comprobaciones secundarias**. La
+instalación, los permisos, el canal de notificación, el renombrado del launcher y la prueba de
+humo instrumentada ya se comprobaron. Además, la validación con movimiento real confirmó la
+ventana de 15 s y la parada de 10 s:
+
+- Línea base de 90 s sentado: sin transiciones `WALKING`, sin avisos y estado `IDLE`.
+- Caminata real (`00:18:02.828`–`00:19:09.968`): `ENTER` → `WALKING` a los 15,007 s, aviso
+  permitido, `EXIT` → `IDLE` a los 10,004 s.
+- Durante la misma caminata no se repitió el aviso: `allowed=false reason=cooldown`.
+- Botones **No estoy caminando** y **Desactivar** probados con la notificación de prueba;
+  snooze, desactivación y reactivación funcionaron.
+
+Lista de comprobaciones:
 
 - [x] Instalar la nueva app (`io.alexis900.neoheadsup`) y comprobar que el launcher muestra
       NeoHeadsUp (puede convivir con la versión anterior hasta desinstalarla).
-- [ ] Permanecer sentado quieto durante varios minutos y confirmar que no aparece ningún aviso.
-- [ ] Caminar de verdad con la pantalla encendida y desbloqueada: el aviso debe aparecer tras
+- [x] Permanecer sentado quieto durante varios minutos y confirmar que no aparece ningún aviso.
+- [x] Caminar de verdad con la pantalla encendida y desbloqueada: el aviso debe aparecer tras
       unos 15 segundos, no de inmediato.
 - [ ] Entrar y salir rápidamente de la actividad de caminata: la confirmación de 15 s debe
       reiniciarse y no debe generarse un aviso falso.
-- [ ] Caminar, detenerse y permanecer sentado: el estado debe volver a `IDLE` tras 10 s y no
+- [x] Caminar, detenerse y permanecer sentado: el estado debe volver a `IDLE` tras 10 s y no
       deben quedar avisos pendientes.
 - [ ] Bloquear el teléfono mientras se camina y desbloquearlo después: el aviso debe aparecer
       solo si la evidencia sigue siendo reciente.
-- [ ] Comprobar el enfriamiento de 15 minutos entre avisos.
-- [ ] Probar los botones **No estoy caminando** y **Desactivar**.
+- [ ] Comprobar el enfriamiento de 15 minutos entre dos caminatas distintas. Ya se observó un
+      rechazo por `cooldown` dentro de la misma caminata.
+- [x] Probar los botones **No estoy caminando** y **Desactivar** (con notificación de prueba).
 - [ ] Reiniciar el dispositivo y confirmar que la sesión anterior no se reutiliza.
-- [ ] Revisar `adb logcat -s NeoHeadsUp` y verificar los motivos de aceptación, rechazo y
+- [x] Revisar `adb logcat -s NeoHeadsUp` y verificar los motivos de aceptación, rechazo y
       decisión del aviso.
 
 ## Compatibilidad
@@ -258,10 +267,11 @@ escriben en el registro local y en la propia app.
 
 ## Estado de desarrollo
 
-Versión inicial de NeoHeadsUp. La lógica de detección está cubierta por pruebas unitarias, la
-app compila y el APK `io.alexis900.neoheadsup` está instalado en el Pixel 7a. La prueba de humo
-instrumentada con transiciones sintéticas se superó; la validación física con movimiento real
-sigue pendiente según la lista de comprobaciones.
+Versión inicial de NeoHeadsUp. La lógica de detección está cubierta por pruebas unitarias y la
+prueba instrumental; el APK `io.alexis900.neoheadsup` está instalado en el Pixel 7a. La
+validación física con movimiento real confirmó el aviso a los 15 s y el cierre de la sesión a
+los 10 s. Quedan pendientes las comprobaciones secundarias de bloqueo, enfriamiento entre dos
+caminatas, transiciones rápidas y reinicio del dispositivo.
 
 ## Licencia
 

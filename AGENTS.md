@@ -215,17 +215,19 @@ Validated on a Pixel 7a:
 
 - New package installs and appears as NeoHeadsUp.
 - Runtime permissions and notification channel work.
-- Synthetic transition smoke test passes.
-- A real walking transition was observed: confirmation, notification, and a 10-second stop
-  confirmation closed the session.
+- Synthetic transition smoke test passes, including the 15 s / 10 s timing tolerances.
+- A 90-second seated baseline produced no walking transition and no alert.
+- A real walk confirmed the session after 15.007 s and posted the reminder; the stop returned
+  the state to `IDLE` after 10.004 s.
+- The alert was not repeated during the same walk (`reason=cooldown`).
+- The snooze and disable notification actions worked; re-enabling the feature cleared snooze
+  and restored activity-recognition registration.
 
 Still pending before calling the physical validation complete:
 
-- A controlled seated baseline with no false alert.
-- Confirmation of the observed real walk with the user, not only sensor logs.
+- Rapid enter/exit behavior with real motion.
 - Lock/unlock behavior while walking.
-- Cooldown behavior across two walks.
-- Snooze and disable notification actions.
+- Cooldown across two separate walks (a same-walk cooldown denial was observed).
 - Reboot behavior.
 - Full review of the Pixel 7a checklist in `README.md`.
 

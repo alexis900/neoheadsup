@@ -66,7 +66,8 @@ Android integration:
 - `WalkingDetector.kt`: registers/unregisters Play Services
 - `DetectionEngine.kt`: connects the core to Android, persistence, and diagnostics
 - `SessionStore.kt`: persists the session snapshot
-- `RecheckScheduler.kt` / `RecheckReceiver.kt`: confirmation, stop, and expiry checks
+- `RecheckScheduler.kt` / `RecheckReceiver.kt`: confirmation, stop, and expiry checks; an
+  in-process `Handler` runs the short confirmation window and `AlarmManager` is the fallback
 - `UserPresentReceiver.kt`: rechecks after unlock
 - `BootReceiver.kt`: handles reboot and package replacement
 - `NotificationActionReceiver.kt`: snooze and disable actions
@@ -124,7 +125,9 @@ Before claiming a code change is complete:
 1. Unit tests pass: `./gradlew testDebugUnitTest`.
 2. The debug APK and test APK build.
 3. Android lint has no errors.
-4. If detection behavior changed, run the instrumented smoke test on a device.
+4. If detection behavior changed, run the instrumented smoke test on a device. The test
+   checks that the 15 s and 10 s confirmation windows stay within tolerance, so an inexact
+   alarm cannot silently replace the in-process tick.
 5. If behavior depends on real motion, ask the user to perform a real walk while the app is
    enabled through the UI, not by writing `enabled=true` directly.
 6. Verify the persisted state and relevant diagnostic lines.

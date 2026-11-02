@@ -1,43 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.NeoHeadsUp" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:colorPrimary">@color/primary</item>
-        <item name="android:colorPrimaryDark">@color/primary_dark</item>
-        <item name="android:colorAccent">@color/primary</item>
+    <style name="Base.Theme.NeoHeadsUp" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorOnPrimary">@color/on_primary</item>
+        <item name="colorPrimaryContainer">@color/primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/on_primary_container</item>
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorOnSecondary">@color/on_secondary</item>
+        <item name="colorSecondaryContainer">@color/secondary_container</item>
+        <item name="colorOnSecondaryContainer">@color/on_secondary_container</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="colorSurfaceVariant">@color/surface_variant</item>
+        <item name="colorOnSurfaceVariant">@color/text_secondary</item>
+        <item name="colorOutline">@color/divider</item>
+        <item name="colorError">@color/error</item>
+        <item name="colorOnError">@color/on_error</item>
+        <item name="android:colorBackground">@color/background</item>
         <item name="android:windowBackground">@color/background</item>
-        <item name="android:statusBarColor">@color/primary_dark</item>
+        <item name="android:statusBarColor">@color/background</item>
         <item name="android:navigationBarColor">@color/background</item>
-        <item name="android:windowLightStatusBar">false</item>
-        <item name="android:windowLightNavigationBar">true</item>
         <item name="android:forceDarkAllowed">false</item>
-        <item name="android:colorBackground">@color/surface</item>
-        <item name="android:textColorPrimary">@color/text_primary</item>
-        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="elevationOverlayEnabled">false</item>
     </style>
 
-    <style name="TextAppearance.NeoHeadsUp.Title" parent="android:TextAppearance.Material.Headline">
-        <item name="android:textColor">@color/text_primary</item>
+    <style name="Theme.NeoHeadsUp" parent="Base.Theme.NeoHeadsUp">
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+    </style>
+
+    <style name="TextAppearance.NeoHeadsUp.Title" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="TextAppearance.NeoHeadsUp.Section" parent="android:TextAppearance.Material.Subhead">
-        <item name="android:textColor">@color/text_secondary</item>
+    <style name="TextAppearance.NeoHeadsUp.Section" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:letterSpacing">0.08</item>
     </style>
 
-    <style name="TextAppearance.NeoHeadsUp.Body" parent="android:TextAppearance.Material.Body1">
-        <item name="android:textColor">@color/text_primary</item>
+    <style name="TextAppearance.NeoHeadsUp.Body" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
-    <style name="TextAppearance.NeoHeadsUp.Caption" parent="android:TextAppearance.Material.Caption">
-        <item name="android:textColor">@color/text_secondary</item>
+    <style name="TextAppearance.NeoHeadsUp.Caption" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
     </style>
 
-    <style name="Widget.NeoHeadsUp.Button" parent="android:Widget.Material.Button">
-        <item name="android:textColor">@color/primary</item>
-        <item name="android:background">@drawable/bg_button_outline</item>
+    <style name="Widget.NeoHeadsUp.Button" parent="Widget.Material3.Button.OutlinedButton">
         <item name="android:minHeight">44dp</item>
         <item name="android:paddingStart">14dp</item>
         <item name="android:paddingEnd">14dp</item>

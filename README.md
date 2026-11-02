@@ -45,23 +45,27 @@ existe permiso de Internet.
   muestra en la interfaz.
 - Acciones de notificación: **No estoy caminando** (snooze de 30 minutos) y **Desactivar**.
 - Recordatorio de prueba manual desde la interfaz.
-- **Tema claro y oscuro** según el ajuste del sistema, con una paleta propia para cada modo.
+- **Ajustes dentro de la app**, accesibles con el botón flotante de engranaje: tema
+  **Sistema / Claro / Oscuro**, versión instalada y enlace al repositorio.
+- **Material Design 3** con tema claro y oscuro propio. El tema elegido se guarda en la app y
+  se aplica con `AppCompatDelegate`; la opción **Sistema** sigue el ajuste del dispositivo.
 
 ## Tecnologías utilizadas
 
 - Kotlin 1.9.
 - Android SDK 34, mínimo Android 10 (API 29).
-- Vistas del framework Android (XML) y `SharedPreferences`.
+- Vistas Android (XML), `AppCompatActivity` y **Material Components 3**
+  (`Theme.Material3.DayNight.NoActionBar`) con `SharedPreferences`.
 - `AlarmManager` y un chequeo en proceso con `Handler` para las comprobaciones de
   confirmación, parada y caducidad. La alarma actúa como respaldo si el proceso se cierra.
 - Google Play Services Location (`ActivityRecognition`).
 - Gradle 8.7 con Android Gradle Plugin 8.5.2.
 - JUnit 4 para las pruebas unitarias de la lógica pura.
 
-> **Nota sobre Jetpack Compose:** el proyecto existente no usaba Compose; su interfaz está
-> construida con vistas XML. Para no reconstruir la aplicación sin justificación se mantuvo
-> esa arquitectura y se añadió un núcleo de detección puro y testeable. Migrar a Compose
-> sería un cambio independiente y no forma parte de esta corrección.
+> **Nota sobre Jetpack Compose:** el proyecto no usa Compose; su interfaz está construida con
+> vistas XML y componentes de Material 3. Para no reconstruir la aplicación sin justificación
+> se mantuvo esa arquitectura y se añadió un núcleo de detección puro y testeable. Migrar a
+> Compose sería un cambio independiente y no forma parte de esta corrección.
 
 ## Arquitectura
 
@@ -87,6 +91,11 @@ La capa Android conecta ese núcleo con el sistema:
 - `NotificationActionReceiver`: snooze y desactivación.
 - `HeadsUpNotifier`: aplica `AlertDecider` y publica la notificación.
 - `Diag`: registro en Logcat y último evento visible en la app.
+- `MainActivity`: permisos, activación, enfriamiento, prueba, diagnóstico y botón flotante
+  para abrir los ajustes.
+- `SettingsActivity`: selector de tema, versión instalada y enlace al repositorio.
+- `ThemeManager` y `NeoHeadsUpApp`: aplican el tema guardado mediante `AppCompatDelegate`.
+- `Prefs`: preferencias privadas, incluido el modo de tema (`system`, `light`, `dark`).
 
 ### Parámetros de detección
 
@@ -136,6 +145,9 @@ origen desconocido si el sistema lo solicita.
    aparecerá tras 15 segundos de caminata continua confirmada.
 6. Usa **Enviar recordatorio de prueba** para comprobar el estilo de la notificación sin
    caminar.
+7. Pulsa el **botón flotante de engranaje** para abrir los ajustes de la app. Ahí puedes
+   cambiar el tema (**Sistema**, **Claro** u **Oscuro**), consultar la versión instalada y
+   abrir el repositorio.
 
 ## Permisos y justificación
 
@@ -223,6 +235,20 @@ Lista de comprobaciones:
 - [x] Revisar `adb logcat -s NeoHeadsUp` y verificar los motivos de aceptación, rechazo y
       decisión del aviso.
 
+### Validación de la interfaz Material 3
+
+- [x] La pantalla principal muestra tarjetas, interruptor, desplegable de enfriamiento, botón
+      tonal y botón flotante de ajustes.
+- [x] Los ajustes se abren desde el botón flotante y la flecha de la barra superior vuelve a
+      la pantalla principal.
+- [x] El selector de tema cambia entre **Sistema**, **Claro** y **Oscuro**; el valor persiste
+      y **Sistema** sigue el modo nocturno del dispositivo.
+- [x] La versión se muestra como `1.1.0 (2)` y la fila del repositorio abre
+      `github.com/alexis900/neoheadsup`.
+- [x] El diálogo de permiso bloqueado usa un diálogo Material con las acciones
+      **Cancelar** y **Abrir ajustes**.
+- [x] El enfriamiento elegido se guarda y el estado muestra la frecuencia seleccionada.
+
 ## Idiomas
 
 La interfaz y las notificaciones están disponibles en **español e inglés**:
@@ -240,6 +266,22 @@ notificaciones se actualizan al abrir la app con el nuevo idioma.
 Verificado en el Pixel 7a: la interfaz, la notificación con sus acciones y los diálogos de
 permisos se muestran en inglés y en español, y el selector de idioma de Android reconoce la
 app con ambos idiomas.
+
+## Interfaz y ajustes
+
+La pantalla principal usa Material 3: tarjetas, interruptor, desplegable de enfriamiento,
+botón tonal de prueba y un botón flotante con forma de engranaje. Los ajustes se abren desde
+ese botón e incluyen:
+
+- Selector de tema **Sistema / Claro / Oscuro**, con vista previa inmediata y persistencia.
+- Versión instalada en formato `versionName (versionCode)`.
+- Acceso al repositorio `github.com/alexis900/neoheadsup`; se abre con la app externa que el
+  dispositivo tenga configurada y no requiere permiso de Internet para NeoHeadsUp.
+
+El tema se aplica antes de crear las actividades con `AppCompatDelegate`, de modo que
+Material 3 y AppCompat usan el mismo modo nocturno. La paleta clara y oscura vive en
+`values/colors.xml` y `values-night/colors.xml`; el azul de marca se mantiene para el
+launcher, la notificación y el botón flotante.
 
 ## Compatibilidad
 
@@ -287,11 +329,12 @@ escriben en el registro local y en la propia app.
 
 ## Estado de desarrollo
 
-Versión inicial de NeoHeadsUp. La lógica de detección está cubierta por pruebas unitarias y la
-prueba instrumental; el APK `io.alexis900.neoheadsup` está instalado en el Pixel 7a. La
-validación física con movimiento real confirmó el aviso a los 15 s y el cierre de la sesión a
-los 10 s. Quedan pendientes las comprobaciones secundarias de bloqueo, enfriamiento entre dos
-caminatas, transiciones rápidas y reinicio del dispositivo.
+Versión 1.1.0 de NeoHeadsUp, con interfaz Material 3 y ajustes propios de tema, versión y
+repositorio. La lógica de detección está cubierta por pruebas unitarias y la prueba
+instrumental; el APK `io.alexis900.neoheadsup` está instalado en el Pixel 7a. La validación
+física con movimiento real confirmó el aviso a los 15 s y el cierre de la sesión a los 10 s.
+Quedan pendientes las comprobaciones secundarias de bloqueo, enfriamiento entre dos caminatas,
+transiciones rápidas y reinicio del dispositivo.
 
 ## Licencia
 

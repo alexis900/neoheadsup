@@ -16,6 +16,11 @@ object Prefs {
     private const val KEY_COOLDOWN_MINUTES = "cooldown_minutes"
     private const val KEY_LAST_NOTIFICATION = "last_notification"
     private const val KEY_SNOOZE_UNTIL = "snooze_until"
+    private const val KEY_THEME_MODE = "theme_mode"
+
+    const val THEME_SYSTEM = "system"
+    const val THEME_LIGHT = "light"
+    const val THEME_DARK = "dark"
 
     /** Removed in NeoHeadsUp; kept only to clean it from upgraded installs. */
     private const val LEGACY_KEY_WALKING_SINCE = "walking_since"
@@ -63,6 +68,13 @@ object Prefs {
 
     fun clearSnooze(context: Context) {
         sp(context).edit().remove(KEY_SNOOZE_UNTIL).apply()
+    }
+
+    fun getThemeMode(context: Context): String =
+        sp(context).getString(KEY_THEME_MODE, THEME_SYSTEM) ?: THEME_SYSTEM
+
+    fun setThemeMode(context: Context, mode: String) {
+        sp(context).edit().putString(KEY_THEME_MODE, mode).apply()
     }
 
     /**

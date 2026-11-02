@@ -73,9 +73,15 @@ Android integration:
 - `NotificationActionReceiver.kt`: snooze and disable actions
 - `HeadsUpNotifier.kt`: applies the alert policy and posts notifications
 - `Diag.kt`: Logcat diagnostics and the latest event shown in the UI
-- `MainActivity.kt`: permissions, enable/disable, cooldown, test, and diagnostics UI
+- `MainActivity.kt`: permissions, enable/disable, cooldown, test, diagnostics, and the
+  floating settings button
+- `SettingsActivity.kt`: theme selector, installed version, and repository link
+- `ThemeManager.kt` / `NeoHeadsUpApp.kt`: apply the stored theme through `AppCompatDelegate`
+- `Prefs.kt`: private preferences, including the `system`/`light`/`dark` theme mode
 
-The UI uses framework Views and XML, not Jetpack Compose. Do not migrate to Compose as part
+The UI uses Android Views, XML, and **Material Components 3** (`AppCompatActivity`,
+`Theme.Material3.DayNight.NoActionBar`, Material cards, buttons, switches, exposed dropdowns,
+FAB, toolbar, and dialogs). It does not use Jetpack Compose. Do not migrate to Compose as part
 of an unrelated fix. If a migration is requested, treat it as a separate change with its own
 validation plan.
 
@@ -147,8 +153,15 @@ perfect. Document this limitation instead of hiding it.
 - Keep `app/src/main/res/xml/locales_config.xml` and the manifest `android:localeConfig`
   attribute in sync with every supported language.
 - Keep the UI colors in `values/colors.xml` and `values-night/colors.xml`; do not hardcode
-  colors in layouts or Kotlin. The app follows the system light/dark setting, and the brand
-  color stays constant for the launcher and notification icon.
+  colors in layouts or Kotlin. The app exposes **System / Light / Dark** in its own settings,
+  stores the choice in `SharedPreferences`, and applies it with `AppCompatDelegate` before
+  activities are created. The brand color stays constant for the launcher, notification icon,
+  and floating settings button.
+- Use Material 3 components and attributes (`Theme.Material3.*`, `?attr/colorSurface`,
+  `MaterialCardView`, `MaterialButton`, `MaterialSwitch`, `MaterialAutoCompleteTextView`,
+  `MaterialAlertDialogBuilder`) instead of custom backgrounds for ordinary controls.
+- Settings live in `SettingsActivity` and open from the main screen's floating gear button;
+  do not reintroduce a navigation drawer or hamburger menu.
 - Preserve the diagnostic format: timestamp, transition/tick, activity, previous and new
   state, accepted/rejected reason, and alert decision reason.
 - Keep notification channel id `heads_up` and notification id `2001` unless there is a
@@ -232,6 +245,11 @@ Validated on a Pixel 7a:
   and restored activity-recognition registration.
 - English and Spanish UI, notification actions, and permission dialogs were verified on the
   device, including Android's per-app language selector.
+- Material 3 main and settings screens render correctly in light and dark mode; the exposed
+  cooldown and theme dropdowns, floating settings button, toolbar back navigation, version
+  row, repository link, and Material permission dialog were exercised on the device.
+- The theme selector persists `system`/`light`/`dark`, and the System option follows the
+  device night-mode changes.
 
 Still pending before calling the physical validation complete:
 
@@ -246,6 +264,10 @@ Still pending before calling the physical validation complete:
 - `README.md`: Spanish product and validation documentation
 - `app/build.gradle`: package, SDK levels, dependencies, and test runner
 - `app/src/main/AndroidManifest.xml`: permissions and components
+- `app/src/main/res/layout/activity_main.xml`: Material 3 main screen
+- `app/src/main/res/layout/activity_settings.xml`: Material 3 settings screen
+- `app/src/main/res/values/themes.xml` and `values-night/themes.xml`: Material 3 themes
+- `app/src/main/res/values/colors.xml` and `values-night/colors.xml`: light/dark palettes
 - `app/src/main/kotlin/io/alexis900/neoheadsup/detection/`: pure detection core
 - `app/src/test/kotlin/io/alexis900/neoheadsup/detection/DetectionCoreTest.kt`: JVM tests
 - `app/src/androidTest/kotlin/io/alexis900/neoheadsup/WalkingTestRunner.kt`: device smoke test

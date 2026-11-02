@@ -1,8 +1,6 @@
 package io.alexis900.neoheadsup
 
 import android.Manifest
-import android.app.Activity
-import android.app.AlertDialog
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Intent
@@ -12,19 +10,19 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.Spinner
-import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.materialswitch.MaterialSwitch
+import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import io.alexis900.neoheadsup.detection.SessionConfig
 import io.alexis900.neoheadsup.detection.SessionState
 
-class MainActivity : Activity() {
+class MainActivity : AppCompatActivity() {
 
-    private lateinit var switchEnabled: Switch
+    private lateinit var switchEnabled: MaterialSwitch
     private lateinit var textStatus: TextView
     private lateinit var textActivityState: TextView
     private lateinit var textNotificationState: TextView
@@ -33,14 +31,17 @@ class MainActivity : Activity() {
     private lateinit var buttonNotifications: Button
     private lateinit var buttonChannelSettings: Button
     private lateinit var buttonTest: Button
-    private lateinit var spinnerCooldown: Spinner
+    private lateinit var spinnerCooldown: MaterialAutoCompleteTextView
+    private lateinit var buttonSettings: View
     private var updatingSwitch = false
+    private var appliedThemeMode: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         NotificationHelper.createChannel(this)
         Prefs.removeLegacySession(this)
+        appliedThemeMode = Prefs.getThemeMode(this)
 
         switchEnabled = findViewById(R.id.switch_enabled)
         textStatus = findViewById(R.id.text_status)
@@ -52,13 +53,19 @@ class MainActivity : Activity() {
         buttonChannelSettings = findViewById(R.id.button_channel_settings)
         buttonTest = findViewById(R.id.button_test)
         spinnerCooldown = findViewById(R.id.spinner_cooldown)
+        buttonSettings = findViewById(R.id.button_settings)
 
         setupCooldownSpinner()
+        setupNavigation()
         setupListeners()
     }
 
     override fun onResume() {
         super.onResume()
+        if (appliedThemeMode != Prefs.getThemeMode(this)) {
+            recreate()
+            return
+        }
         // Expire stale state and confirm a walk whose 15 second window elapsed while the
         // activity was in the background.
         DetectionEngine.onTick(this, "activity_resume")
@@ -68,33 +75,24 @@ class MainActivity : Activity() {
     private fun setupCooldownSpinner() {
         val labels = COOLDOWN_MINUTES.map {
             getString(R.string.cooldown_option, it)
-        }
-        val adapter = ArrayAdapter(
-            this,
-            android.R.layout.simple_spinner_item,
-            labels
-        )
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerCooldown.adapter = adapter
+        }.toTypedArray()
 
         val current = Prefs.getCooldownMinutes(this)
         val position = COOLDOWN_MINUTES.indexOf(current).takeIf { it >= 0 }
             ?: COOLDOWN_MINUTES.indexOf(SessionConfig.DEFAULT_COOLDOWN_MINUTES)
                 .coerceAtLeast(0)
-        spinnerCooldown.setSelection(position, false)
 
-        spinnerCooldown.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                selected: Int,
-                id: Long
-            ) {
-                Prefs.setCooldownMinutes(this@MainActivity, COOLDOWN_MINUTES[selected])
-                updateUi()
-            }
+        spinnerCooldown.setSimpleItems(labels)
+        spinnerCooldown.setText(labels[position], false)
+        spinnerCooldown.setOnItemClickListener { _, _, selected, _ ->
+            Prefs.setCooldownMinutes(this@MainActivity, COOLDOWN_MINUTES[selected])
+            updateUi()
+        }
+    }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) = Unit
+    private fun setupNavigation() {
+        buttonSettings.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
         }
     }
 
@@ -315,7 +313,7 @@ class MainActivity : Activity() {
             else -> null
         } ?: return
 
-        AlertDialog.Builder(this)
+        MaterialAlertDialogBuilder(this)
             .setTitle(R.string.permission_dialog_title)
             .setMessage(message)
             .setPositiveButton(R.string.open_settings) { _, _ -> openAppSettings() }
@@ -324,7 +322,7 @@ class MainActivity : Activity() {
     }
 
     private fun showNotificationSettingsDialog() {
-        AlertDialog.Builder(this)
+        MaterialAlertDialogBuilder(this)
             .setTitle(R.string.permission_dialog_title)
             .setMessage(R.string.notification_settings_message)
             .setPositiveButton(R.string.open_settings) { _, _ ->
